@@ -1,0 +1,135 @@
+<tdc version="0.1">
+  <!-- Синтетический мир: сеть из машин, у каждой своя история входов.
+       Два пула, потому что нагрузка в сети распределена крайне неравномерно:
+       горстка серверов видит огромный поток и сотни учёток ЗАКОННО, а рабочих
+       станций много и каждая тиха.
+
+       Роли рабочих машин: 0 - станция (свои 1..4 учётки), 2 - НОВАЯ машина
+       (истории нет: у неё всё ново законно), 3 - станция, чьи учётки во второй
+       период становятся чужими, 4 - машина ОДНОВРЕМЕННО новая и работающая под
+       чужими учётками. Роль 4 существует затем, что сеть, обученную молчать на
+       законной новизне, надо отдельно научить различать её от новизны чужой:
+       у честной новой машины учётки свежие, у этой - переехавшие с других
+       машин, то есть в сети давно известные.
+
+       Период 0 - история, период 1 - наблюдение. Ручки развёрнуты внутри
+       класса намеренно широко: сеть должна учить класс, а не пресет.
+
+       Состав мира (доля серверов, редкость новых машин, плотность потока)
+       откалиброван по ГРУБОЙ статистике реальной сети. Признаки самого
+       наблюдаемого явления не калибровались ни по чему. -->
+
+  <env count="400000" seed="world-train-1">
+
+    <pool name="Work" count="290">
+      <sequence name="hid"><gen type="increment" value="1"/></sequence>
+      <sequence name="role"><gen type="text" value="0,2,3,4" percent="78.8,0.6,20,0.6"/></sequence>
+      <sequence name="userBase"><gen type="formula" expr="hid * 30"/></sequence>
+      <sequence name="userSpan"><gen type="number" value="1..4"/></sequence>
+      <sequence name="dstBase"><gen type="number" value="1..4500"/></sequence>
+      <sequence name="dstSpan"><gen type="number" value="2..9"/></sequence>
+      <!-- разброс по часам: чем шире, тем реже события в окне; часть событий
+           уходит за конец наблюдения - так рождаются и плотные окна, и тихие -->
+      <sequence name="spread"><gen type="number" value="1..40"/></sequence>
+      <!-- у одних машин состав не меняется годами, у других течёт постоянно -->
+      <sequence name="churnMil"><gen type="number" value="0..8"/></sequence>
+      <!-- у чужой активности свой ограниченный круг учёток и мест: ось
+           развёрнута ШИРОКО (2..60), чтобы сеть не заучила один размер -->
+      <!-- ДОЛЯ чужих событий среди всех событий машины: от 2% до 100%.
+           В реальном журнале чужое событие бывает одно на полсотни обычных,
+           и признак-доля его топит. Сеть обязана увидеть разбавленный случай,
+           поэтому ось развёрнута до самых редких значений. -->
+      <sequence name="fgRateMil"><gen type="number" value="1000..1000"/></sequence>
+      <!-- круг чужих учёток: НОМЕРА ДРУГИХ МАШИН, чьи аккаунты используются -->
+      <sequence name="fgBase"><gen type="number" value="1..290"/></sequence>
+      <sequence name="fgSpan"><gen type="number" value="2..60"/></sequence>
+      <sequence name="fgDstBase"><gen type="number" value="1..4900"/></sequence>
+      <sequence name="fgDstSpan"><gen type="number" value="2..70"/></sequence>
+      <sequence name="failMil"><gen type="number" value="20..700"/></sequence>
+      <sequence name="baseMil"><gen type="number" value="1..30"/></sequence>
+    </pool>
+
+    <pool name="Serv" count="10">
+      <sequence name="sid"><gen type="increment" value="1"/></sequence>
+      <sequence name="userBase"><gen type="number" value="1..7000"/></sequence>
+      <sequence name="userSpan"><gen type="number" value="60..280"/></sequence>
+      <sequence name="dstBase"><gen type="number" value="1..3000"/></sequence>
+      <sequence name="dstSpan"><gen type="number" value="40..400"/></sequence>
+      <sequence name="spread"><gen type="number" value="15..22"/></sequence>
+      <sequence name="baseMil"><gen type="number" value="1..30"/></sequence>
+    </pool>
+
+    <sequence name="W"><gen type="pool" value="Work"/></sequence>
+    <sequence name="S"><gen type="pool" value="Serv"/></sequence>
+    <sequence name="N"><gen type="increment" value="1"/></sequence>
+
+    <!-- треть потока идёт на серверы: их мало, поток на каждый огромен -->
+    <sequence name="IsServ"><gen type="formula" expr="hash(N, 10) < 0.35 ? 1 : 0"/></sequence>
+
+    <!-- Служебные и машинные учётки: в настоящей сети они входят повсюду, и
+         охват такой учётки - тысячи машин. Без них мир состоит из одних
+         "привязанных к рабочему месту" аккаунтов, каких в жизни не бывает. -->
+    <!-- Каждая машина пользуется одними и теми же служебными учётками (потому
+         новизны они не создают), а каждая такая учётка обслуживает несколько
+         машин - отсюда широкий охват. Малая часть (тир 9500+) ходит везде. -->
+    <sequence name="IsSvc"><gen type="formula" expr="hash(N, 12) < 0.30 ? 1 : 0"/></sequence>
+
+    <!-- имя машины: серверы и рабочие машины в разных диапазонах номеров -->
+    <sequence name="Host"><gen type="formula" expr="IsServ == 1 ? 9000 + S.sid : W.hid"/></sequence>
+    <sequence name="Role"><gen type="formula" expr="IsServ == 1 ? 1 : W.role"/></sequence>
+    <sequence name="Spread"><gen type="formula" expr="IsServ == 1 ? S.spread : W.spread"/></sequence>
+
+    <!-- новая машина живёт только во втором периоде -->
+    <sequence name="Period">
+      <gen type="formula" expr="Role == 2 || Role == 4 ? 1 : (hash(N, 6) < 0.60 ? 0 : 1)"/>
+    </sequence>
+
+    <sequence name="Time">
+      <gen type="formula"
+           expr="Period == 0 ? floor(hash(N, 5) * 28800) : 28800 + floor(hash(N, 3) * Spread) * 3600 + floor(hash(N, 4) * 3600)"/>
+    </sequence>
+
+    <!-- на этой машине во втором периоде учётки чужие -->
+    <sequence name="Foreign">
+      <gen type="formula" expr="(Role == 3 || Role == 4) && Period == 1 && hash(N, 11) < W.fgRateMil / 1000 ? 1 : 0"/>
+    </sequence>
+
+    <sequence name="UserBase"><gen type="formula" expr="IsServ == 1 ? S.userBase : W.userBase"/></sequence>
+    <sequence name="UserSpan"><gen type="formula" expr="IsServ == 1 ? S.userSpan : W.userSpan"/></sequence>
+    <sequence name="DstBase"><gen type="formula" expr="IsServ == 1 ? S.dstBase : W.dstBase"/></sequence>
+    <sequence name="DstSpan"><gen type="formula" expr="IsServ == 1 ? S.dstSpan : W.dstSpan"/></sequence>
+
+    <!-- Законное изменение бывает двух родов, и они выглядят по-разному:
+         новый сотрудник (учётки не было в сети вообще, диапазон 20000+) и
+         переход существующего человека на другую машину. Без обоих сеть не
+         научится отличать законную новизну от чужих учётных данных. -->
+    <sequence name="Churn">
+      <gen type="formula" expr="Foreign == 0 && IsSvc == 0 && hash(N, 14) < W.churnMil / 10000 ? 1 : 0"/>
+    </sequence>
+
+    <sequence name="User">
+      <gen type="formula"
+           expr="Foreign == 1 ? ((W.fgBase + floor(hash(N, 1) * W.fgSpan)) % 290) * 30 + floor(hash(N, 18) * 2) : (IsSvc == 1 ? (hash(N, 13) < 0.25 ? 9500 + floor(hash(N, 1) * 20) : 9000 + (Host * 7 + floor(hash(N, 1) * 6)) % 400) : (Churn == 1 ? (hash(N, 17) < 0.5 ? 20000 + floor(hash(N, 15) * 900) : (floor(hash(N, 15) * 290)) * 30 + floor(hash(N, 19) * 4)) : UserBase + floor(hash(N, 1) * UserSpan)))"/>
+    </sequence>
+
+    <sequence name="Dst">
+      <gen type="formula"
+           expr="Foreign == 1 ? 1 + (W.fgDstBase + floor(hash(N, 2) * W.fgDstSpan)) % 4900 : (Churn == 1 ? DstBase + DstSpan + floor(hash(N, 16) * 50) : DstBase + floor(hash(N, 2) * DstSpan))"/>
+    </sequence>
+
+    <sequence name="FailCut">
+      <gen type="formula"
+           expr="Foreign == 1 ? W.failMil / 1000 : (IsServ == 1 ? S.baseMil : W.baseMil) / 1000"/>
+    </sequence>
+
+    <sequence name="Ok">
+      <gen if="hash(N, 8) < FailCut" type="text" value="Fail"/>
+      <gen type="text" value="Success"/>
+    </sequence>
+
+  </env>
+
+  <block>
+    <line><data>${{Time}},U${{User}},C${{Host}},D${{Dst}},${{Ok}},${{Foreign}}</data></line>
+  </block>
+</tdc>

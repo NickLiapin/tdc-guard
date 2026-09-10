@@ -1,0 +1,17 @@
+control: one base world, six seeds
+held-out: 3600398 windows, labelled 64
+
+  seed 7: AUC 0.92222
+  seed 17: AUC 0.91508
+  seed 27: AUC 0.89016
+  seed 37: AUC 0.92234
+  seed 47: AUC 0.92064
+  seed 57: AUC 0.93153
+
+spread of opinions: 0.00415
+ENSEMBLE, one world       AUC 0.91713  false alarms before 16/64:     117  before 32:    6945  before all:  3485762  worst rank  3485826
+
+false alarms before the N-th hit out of 64:
+   N:      1     2     4     8    16    24    32
+           11    15    42    80   117   504  6945
+ensemble of SIX WORLDS:  0     2     2     3     7    19   621

@@ -1,0 +1,14 @@
+world: sparse - 26062 windows, labelled 4068
+preparing the held-out set...
+held-out: 3600398 windows, labelled 64
+
+seed 7                     AUC 0.94702  false alarms before 16/64:     303  before 32:     881  before all:  1844866  worst rank  1844930
+seed 17                    AUC 0.93140  false alarms before 16/64:     133  before 32:     656  before all:  2155455  worst rank  2155519
+seed 27                    AUC 0.92709  false alarms before 16/64:     301  before 32:    1066  before all:  1888355  worst rank  1888419
+
+median over seeds - false alarms before the N-th hit out of 64:
+   N:      1     2     4     8    16    24    32
+            4    13    21    29   301   385   881
+
+for comparison (previous champion, LSTM on the base world):
+             3    10    67   102   188   412  3734

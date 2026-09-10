@@ -1,0 +1,14 @@
+world: six no-stage worlds, merged - 152277 windows, labelled 22615
+preparing the held-out set...
+held-out: 3600398 windows, labelled 64
+
+seed 7                     AUC 0.86226  false alarms before 16/64:    7051  before 32:  110885  before all:  3586235  worst rank  3586299
+seed 17                    AUC 0.86817  false alarms before 16/64:   27456  before 32:   76057  before all:  2607776  worst rank  2607840
+seed 27                    AUC 0.85859  false alarms before 16/64:   26297  before 32:   98511  before all:  2941284  worst rank  2941348
+
+median over seeds - false alarms before the N-th hit out of 64:
+   N:      1     2     4     8    16    24    32
+          814   862  1978  6992 26297 59973 98511
+
+for comparison (previous champion, LSTM on the base world):
+             3    10    67   102   188   412  3734

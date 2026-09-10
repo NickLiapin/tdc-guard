@@ -1,0 +1,17 @@
+worlds: 6
+
+networks trained, one per world
+
+SPREAD OF OPINIONS between networks: 0.00488
+  (networks trained on one world had 0.0002)
+
+method                                   AUC   before 1st   before 6th   before 12th
+----------------------------------------------------------------------------
+day 8: best single             0.99623       572       635        974
+day 8: rank averaging               0.99396      1045      1152       1507
+day 8: judge                        0.99406       655       764       1669
+
+day 12: best single            0.97299      2851      3410      14920
+day 12: rank averaging              0.97083      3487      4030      15139
+day 12: judge                       0.96648      1288      5530      14747
+

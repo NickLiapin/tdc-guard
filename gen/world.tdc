@@ -1,0 +1,135 @@
+<tdc version="0.1">
+  <!-- Synthetic world: a network of machines, each with its own login history.
+       Two pools, because the load in a network is distributed very unevenly:
+       a handful of servers sees a huge stream and hundreds of accounts LEGITIMATELY,
+       while workstations are many and each one is quiet.
+
+       Roles of the work machines: 0 - workstation (its own 1..4 accounts), 2 - NEW host
+       (no history: everything on it is legitimately new), 3 - workstation whose accounts
+       become foreign in the second period, 4 - a machine that is new AND working under
+       foreign accounts AT THE SAME TIME. Role 4 exists because a network trained to stay
+       silent on legitimate novelty has to be taught separately to tell it from foreign
+       novelty: an honest new host has fresh accounts, this one has accounts moved from
+       other machines, that is, long known to the network.
+
+       Period 0 - history, period 1 - observation. The knobs are spread deliberately
+       wide within a class: the network must learn the class, not a preset.
+
+       The makeup of the world (share of servers, rarity of new hosts, density of the
+       stream) is calibrated against ROUGH statistics of a real network. The features of
+       the observed phenomenon itself were not calibrated against anything. -->
+
+  <env count="400000" seed="world-train-1">
+
+    <pool name="Work" count="290">
+      <sequence name="hid"><gen type="increment" value="1"/></sequence>
+      <sequence name="role"><gen type="text" value="0,2,3,4" percent="78.8,0.6,20,0.6"/></sequence>
+      <sequence name="userBase"><gen type="formula" expr="hid * 30"/></sequence>
+      <sequence name="userSpan"><gen type="number" value="1..4"/></sequence>
+      <sequence name="dstBase"><gen type="number" value="1..4500"/></sequence>
+      <sequence name="dstSpan"><gen type="number" value="2..9"/></sequence>
+      <!-- spread over hours: the wider, the rarer the events in a window; some events
+           go past the end of observation - that is how both dense and quiet windows are born -->
+      <sequence name="spread"><gen type="number" value="1..40"/></sequence>
+      <!-- on some machines the makeup does not change for years, on others it flows constantly -->
+      <sequence name="churnMil"><gen type="number" value="0..8"/></sequence>
+      <!-- foreign activity has its own limited circle of accounts and places: the axis
+           is spread WIDE (2..60) so that the network does not memorise one size -->
+      <!-- The SHARE of foreign events among all events of a machine: from 2% to 100%.
+           In a real journal a foreign event can be one in fifty ordinary ones,
+           and a share feature drowns it. The network must see the diluted case,
+           so the axis is spread down to the rarest values. -->
+      <sequence name="fgRateMil"><gen type="number" value="1000..1000"/></sequence>
+      <!-- the circle of foreign accounts: the NUMBERS OF OTHER MACHINES whose accounts are used -->
+      <sequence name="fgBase"><gen type="number" value="1..290"/></sequence>
+      <sequence name="fgSpan"><gen type="number" value="2..60"/></sequence>
+      <sequence name="fgDstBase"><gen type="number" value="1..4900"/></sequence>
+      <sequence name="fgDstSpan"><gen type="number" value="2..70"/></sequence>
+      <sequence name="failMil"><gen type="number" value="20..700"/></sequence>
+      <sequence name="baseMil"><gen type="number" value="1..30"/></sequence>
+    </pool>
+
+    <pool name="Serv" count="10">
+      <sequence name="sid"><gen type="increment" value="1"/></sequence>
+      <sequence name="userBase"><gen type="number" value="1..7000"/></sequence>
+      <sequence name="userSpan"><gen type="number" value="60..280"/></sequence>
+      <sequence name="dstBase"><gen type="number" value="1..3000"/></sequence>
+      <sequence name="dstSpan"><gen type="number" value="40..400"/></sequence>
+      <sequence name="spread"><gen type="number" value="15..22"/></sequence>
+      <sequence name="baseMil"><gen type="number" value="1..30"/></sequence>
+    </pool>
+
+    <sequence name="W"><gen type="pool" value="Work"/></sequence>
+    <sequence name="S"><gen type="pool" value="Serv"/></sequence>
+    <sequence name="N"><gen type="increment" value="1"/></sequence>
+
+    <!-- a third of the stream goes to the servers: they are few, the stream to each is huge -->
+    <sequence name="IsServ"><gen type="formula" expr="hash(N, 10) < 0.35 ? 1 : 0"/></sequence>
+
+    <!-- Service and machine accounts: in a real network they log in everywhere, and
+         the reach of such an account is thousands of machines. Without them the world
+         consists of nothing but accounts "tied to a workplace", which never happens in life. -->
+    <!-- Every machine uses the same service accounts (so they create no
+         novelty), and every such account serves several machines - hence
+         the wide reach. A small part (tier 9500+) goes everywhere. -->
+    <sequence name="IsSvc"><gen type="formula" expr="hash(N, 12) < 0.30 ? 1 : 0"/></sequence>
+
+    <!-- machine name: servers and work machines in different number ranges -->
+    <sequence name="Host"><gen type="formula" expr="IsServ == 1 ? 9000 + S.sid : W.hid"/></sequence>
+    <sequence name="Role"><gen type="formula" expr="IsServ == 1 ? 1 : W.role"/></sequence>
+    <sequence name="Spread"><gen type="formula" expr="IsServ == 1 ? S.spread : W.spread"/></sequence>
+
+    <!-- a new host lives only in the second period -->
+    <sequence name="Period">
+      <gen type="formula" expr="Role == 2 || Role == 4 ? 1 : (hash(N, 6) < 0.60 ? 0 : 1)"/>
+    </sequence>
+
+    <sequence name="Time">
+      <gen type="formula"
+           expr="Period == 0 ? floor(hash(N, 5) * 28800) : 28800 + floor(hash(N, 3) * Spread) * 3600 + floor(hash(N, 4) * 3600)"/>
+    </sequence>
+
+    <!-- on this machine the accounts are foreign in the second period -->
+    <sequence name="Foreign">
+      <gen type="formula" expr="(Role == 3 || Role == 4) && Period == 1 && hash(N, 11) < W.fgRateMil / 1000 ? 1 : 0"/>
+    </sequence>
+
+    <sequence name="UserBase"><gen type="formula" expr="IsServ == 1 ? S.userBase : W.userBase"/></sequence>
+    <sequence name="UserSpan"><gen type="formula" expr="IsServ == 1 ? S.userSpan : W.userSpan"/></sequence>
+    <sequence name="DstBase"><gen type="formula" expr="IsServ == 1 ? S.dstBase : W.dstBase"/></sequence>
+    <sequence name="DstSpan"><gen type="formula" expr="IsServ == 1 ? S.dstSpan : W.dstSpan"/></sequence>
+
+    <!-- Legitimate change comes in two kinds, and they look different:
+         a new employee (the account was not in the network at all, range 20000+) and
+         an existing person moving to another machine. Without both the network will
+         not learn to tell legitimate novelty from foreign credentials. -->
+    <sequence name="Churn">
+      <gen type="formula" expr="Foreign == 0 && IsSvc == 0 && hash(N, 14) < W.churnMil / 10000 ? 1 : 0"/>
+    </sequence>
+
+    <sequence name="User">
+      <gen type="formula"
+           expr="Foreign == 1 ? ((W.fgBase + floor(hash(N, 1) * W.fgSpan)) % 290) * 30 + floor(hash(N, 18) * 2) : (IsSvc == 1 ? (hash(N, 13) < 0.25 ? 9500 + floor(hash(N, 1) * 20) : 9000 + (Host * 7 + floor(hash(N, 1) * 6)) % 400) : (Churn == 1 ? (hash(N, 17) < 0.5 ? 20000 + floor(hash(N, 15) * 900) : (floor(hash(N, 15) * 290)) * 30 + floor(hash(N, 19) * 4)) : UserBase + floor(hash(N, 1) * UserSpan)))"/>
+    </sequence>
+
+    <sequence name="Dst">
+      <gen type="formula"
+           expr="Foreign == 1 ? 1 + (W.fgDstBase + floor(hash(N, 2) * W.fgDstSpan)) % 4900 : (Churn == 1 ? DstBase + DstSpan + floor(hash(N, 16) * 50) : DstBase + floor(hash(N, 2) * DstSpan))"/>
+    </sequence>
+
+    <sequence name="FailCut">
+      <gen type="formula"
+           expr="Foreign == 1 ? W.failMil / 1000 : (IsServ == 1 ? S.baseMil : W.baseMil) / 1000"/>
+    </sequence>
+
+    <sequence name="Ok">
+      <gen if="hash(N, 8) < FailCut" type="text" value="Fail"/>
+      <gen type="text" value="Success"/>
+    </sequence>
+
+  </env>
+
+  <block>
+    <line><data>${{Time}},U${{User}},C${{Host}},D${{Dst}},${{Ok}},${{Foreign}}</data></line>
+  </block>
+</tdc>

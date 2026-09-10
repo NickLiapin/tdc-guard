@@ -1,0 +1,6 @@
+training set                             windows  coinc.    d8 AUC           d12 AUC  d12: before 6th
+----------------------------------------------------------------------------------------------------
+base world, 400k, no coincidences           3045        0   0.99998    0.98999+-0.00042             7
+rich world, 8M, no coincidences            21868        0   0.99459    0.97082+-0.00144          3801
+one world with coincidences 1.5%               22408        5   0.99541    0.97196+-0.00163          3526
+six worlds merged, coincidences 0.5-5%     135112       93   0.99779    0.98054+-0.00289          2948

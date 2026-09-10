@@ -1,0 +1,194 @@
+<tdc version="0.1">
+  <!-- RICH WORLD. Two fundamental changes against the previous config.
+
+       1. The attack became a PROCESS, not a coin toss on every single
+          event. A machine has a start moment, and then the stages follow:
+          foothold (quiet, single events) -> credential harvesting (many failures)
+          -> spreading (in breadth) -> reaching the servers. The previous world produced
+          the third stage right away and never the first - hence the blindness to
+          diluted windows.
+
+       2. The norm is assembled from MANY legitimate mechanisms, not three. It is at
+          their intersection that coincidences are born - normal windows that happen
+          to carry the signature of an intruder. They cannot be drawn directly, but they
+          arise on their own once there are enough legitimate phenomena.
+
+       Roles: 0 workstation, 2 new host, 3 under foreign accounts,
+              4 new AND under foreign accounts, 5 administrator on a round,
+              6 terminal server (many people, legitimately),
+              7 service with a broken password (nothing but failures),
+              8 one-off maintenance (a burst of foreign accounts, but legitimate). -->
+
+  <env count="4000000" seed="world-storm-1">
+
+    <pool name="Work" count="2000">
+      <sequence name="hid"><gen type="increment" value="1"/></sequence>
+      <sequence name="role">
+        <gen type="text" value="0,2,3,4" percent="78.8,0.6,20,0.6"/>
+      </sequence>
+
+      <sequence name="userBase"><gen type="formula" expr="hid * 30"/></sequence>
+      <!-- The everyday properties of a machine are INDEPENDENT of each other: the same
+           machine can be a terminal server, have a broken service, and be under
+           maintenance all at once. It is at the COINCIDENCE of independent mechanisms that
+           windows indistinguishable from foreign activity are born. Mutually exclusive
+           roles forbade that by construction - that was the mistake of the previous attempt. -->
+      <sequence name="isTerm"><gen type="text" value="1,0" percent="7,93"/></sequence>
+      <sequence name="isBrok"><gen type="text" value="1,0" percent="7,93"/></sequence>
+      <sequence name="isMaint"><gen type="text" value="1,0" percent="6,94"/></sequence>
+      <sequence name="isAdm"><gen type="text" value="1,0" percent="4,96"/></sequence>
+      <!-- STORM. A service with a broken password that hammers without stopping:
+           one or two users, a few destinations, 90-100% failures,
+           hundreds of events per hour. LANL has 3-13 such windows a day, labelled normal.
+           The previous worlds did not contain them, and the networks took a storm for an attack. -->
+      <sequence name="isStorm"><gen type="text" value="1,0" percent="1.5,98.5"/></sequence>
+      <!-- COINCIDENCE. A machine where both halves of the compromise signature
+           legitimately come together: many new accounts AND many failures. Physically
+           it is a round after a password change - the accounts are new to this machine,
+           and some logins fall through on stale credentials. There are no foreign
+           accounts, the label stays normal, and that is the truth, not a rigging.
+           The share is set by the COIN_PCT line and changes from world to world. -->
+      <sequence name="isCoin"><gen type="text" value="1,0" percent="1.5,98.5"/></sequence>
+      <sequence name="coinFailMil"><gen type="number" value="150..600"/></sequence>
+      <sequence name="coinHour"><gen type="number" value="8..21"/></sequence>
+      <sequence name="userSpan">
+        <gen if="isStorm == 1" type="number" value="1..2"/>
+        <gen if="isTerm == 1" type="number" value="40..160"/>
+        <gen type="number" value="1..4"/>
+      </sequence>
+      <sequence name="dstBase"><gen type="number" value="1..4500"/></sequence>
+      <sequence name="dstSpan">
+        <gen if="isTerm == 1" type="number" value="20..80"/>
+        <gen type="number" value="2..9"/>
+      </sequence>
+
+      <sequence name="isQuiet"><gen type="text" value="1,0" percent="18,82"/></sequence>
+      <sequence name="spread">
+        <gen if="isStorm == 1" type="number" value="1..4"/>
+        <gen if="isQuiet == 1" type="number" value="80..260"/>
+        <gen type="number" value="1..40"/>
+      </sequence>
+      <sequence name="churnMil"><gen type="number" value="0..8"/></sequence>
+
+      <!-- when the activity starts and how widely it spreads -->
+      <sequence name="atkOffMil"><gen type="number" value="0..700"/></sequence>
+      <sequence name="fgBase"><gen type="number" value="1..2000"/></sequence>
+      <sequence name="fgSpan"><gen type="number" value="6..60"/></sequence>
+      <sequence name="fgDstBase"><gen type="number" value="1..4900"/></sequence>
+      <sequence name="fgDstSpan"><gen type="number" value="2..70"/></sequence>
+
+      <sequence name="failMil"><gen type="number" value="20..700"/></sequence>
+      <sequence name="baseMil">
+        <gen if="isStorm == 1" type="number" value="900..1000"/>
+        <gen if="isBrok == 1" type="number" value="300..800"/>
+        <gen type="number" value="1..30"/>
+      </sequence>
+      <!-- the hour of one-off maintenance -->
+      <sequence name="burstHour"><gen type="number" value="8..21"/></sequence>
+    </pool>
+
+    <pool name="Serv" count="40">
+      <sequence name="sid"><gen type="increment" value="1"/></sequence>
+      <sequence name="userBase"><gen type="number" value="1..7000"/></sequence>
+      <sequence name="userSpan"><gen type="number" value="60..280"/></sequence>
+      <sequence name="dstBase"><gen type="number" value="1..3000"/></sequence>
+      <sequence name="dstSpan"><gen type="number" value="40..400"/></sequence>
+      <sequence name="spread"><gen type="number" value="15..22"/></sequence>
+      <sequence name="baseMil"><gen type="number" value="1..30"/></sequence>
+    </pool>
+
+    <sequence name="W"><gen type="pool" value="Work"/></sequence>
+    <sequence name="S"><gen type="pool" value="Serv"/></sequence>
+    <sequence name="N"><gen type="increment" value="1"/></sequence>
+
+    <sequence name="IsServ"><gen type="formula" expr="hash(N, 10) < 0.35 ? 1 : 0"/></sequence>
+    <sequence name="IsSvc"><gen type="formula" expr="hash(N, 12) < 0.30 ? 1 : 0"/></sequence>
+
+    <sequence name="Host"><gen type="formula" expr="IsServ == 1 ? 9000 + S.sid : W.hid"/></sequence>
+    <sequence name="Role"><gen type="formula" expr="IsServ == 1 ? 1 : W.role"/></sequence>
+    <sequence name="Spread"><gen type="formula" expr="IsServ == 1 ? S.spread : W.spread"/></sequence>
+
+    <sequence name="Period">
+      <gen type="formula" expr="Role == 2 || Role == 4 ? 1 : (hash(N, 6) < 0.60 ? 0 : 1)"/>
+    </sequence>
+
+    <sequence name="Time">
+      <gen type="formula"
+           expr="Period == 0 ? floor(hash(N, 5) * 28800) : 28800 + floor(hash(N, 3) * Spread) * 3600 + floor(hash(N, 4) * 3600)"/>
+    </sequence>
+
+    <!-- STAGE. Before the start: -1. Then three hours per stage, four in total. -->
+    <sequence name="AtkStart"><gen type="formula" expr="28800 + W.atkOffMil / 1000 * 39600"/></sequence>
+    <sequence name="Stage">
+      <gen type="formula"
+           expr="Time < AtkStart ? 0 - 1 : min(3, floor((Time - AtkStart) / 10800))"/>
+    </sequence>
+
+    <!-- The share of foreign events grows with the stage: barely noticeable at first. -->
+    <sequence name="FgRate">
+      <gen type="formula"
+           expr="Stage < 0 ? 0 : 1.0"/>
+    </sequence>
+
+    <sequence name="Foreign">
+      <gen type="formula"
+           expr="(Role == 3 || Role == 4) && Period == 1 && hash(N, 11) < FgRate ? 1 : 0"/>
+    </sequence>
+
+    <!-- The reach of accounts also grows with the stage: at first only a few are tried. -->
+    <sequence name="FgWidth">
+      <gen type="formula" expr="2 + max(0, Stage) * (W.fgSpan / 3)"/>
+    </sequence>
+
+    <!-- One-off maintenance: a legitimate burst within one hour. -->
+    <sequence name="CoinWin">
+      <gen type="formula"
+           expr="W.isCoin == 1 && Period == 1 && floor(Time / 3600) == W.coinHour ? 1 : 0"/>
+    </sequence>
+
+    <sequence name="Burst">
+      <gen type="formula"
+           expr="W.isMaint == 1 && Period == 1 && floor(Time / 3600) == W.burstHour ? 1 : 0"/>
+    </sequence>
+
+    <sequence name="Churn">
+      <gen type="formula"
+           expr="Foreign == 0 && IsSvc == 0 && (CoinWin == 1 ? hash(N, 14) < 0.95 : (Burst == 1 ? hash(N, 14) < 0.7 : (W.isAdm == 1 ? hash(N, 14) < 0.6 : hash(N, 14) < W.churnMil / 10000))) ? 1 : 0"/>
+    </sequence>
+
+    <sequence name="UserBase"><gen type="formula" expr="IsServ == 1 ? S.userBase : W.userBase"/></sequence>
+    <sequence name="UserSpan"><gen type="formula" expr="IsServ == 1 ? S.userSpan : W.userSpan"/></sequence>
+    <sequence name="DstBase"><gen type="formula" expr="IsServ == 1 ? S.dstBase : W.dstBase"/></sequence>
+    <sequence name="DstSpan"><gen type="formula" expr="IsServ == 1 ? S.dstSpan : W.dstSpan"/></sequence>
+
+    <sequence name="User">
+      <gen type="formula"
+           expr="Foreign == 1 ? ((W.fgBase + floor(hash(N, 1) * FgWidth)) % 2000) * 30 + floor(hash(N, 18) * 2) : (IsSvc == 1 ? (hash(N, 13) < 0.25 ? 9500 + floor(hash(N, 1) * 20) : 9000 + (Host * 7 + floor(hash(N, 1) * 6)) % 400) : (Churn == 1 ? (hash(N, 17) < (W.isAdm == 1 || Burst == 1 || CoinWin == 1 ? 0.05 : 0.5) ? 20000 + floor(hash(N, 15) * 900) : (floor(hash(N, 15) * 2000)) * 30 + floor(hash(N, 19) * 4)) : UserBase + floor(hash(N, 1) * UserSpan)))"/>
+    </sequence>
+
+    <!-- At the late stages the targets shift towards the servers. -->
+    <sequence name="Dst">
+      <gen type="formula"
+           expr="Foreign == 1 ? (Stage >= 2 && hash(N, 20) < 0.35 ? 4901 + floor(hash(N, 2) * 10) : 1 + (W.fgDstBase + floor(hash(N, 2) * W.fgDstSpan)) % 4900) : (Churn == 1 ? DstBase + DstSpan + floor(hash(N, 16) * 50) : DstBase + floor(hash(N, 2) * DstSpan))"/>
+    </sequence>
+
+    <!-- Failures: most of all at the credential harvesting stage, then they subside. -->
+    <sequence name="StageFail">
+      <gen type="formula" expr="Stage <= 1 ? 1.6 : (Stage == 2 ? 1.0 : 0.6)"/>
+    </sequence>
+
+    <sequence name="FailCut">
+      <gen type="formula"
+           expr="Foreign == 1 ? min(0.95, W.failMil / 1000 * StageFail) : (CoinWin == 1 ? W.coinFailMil / 1000 : (IsServ == 1 ? S.baseMil : W.baseMil) / 1000)"/>
+    </sequence>
+
+    <sequence name="Ok">
+      <gen if="hash(N, 8) < FailCut" type="text" value="Fail"/>
+      <gen type="text" value="Success"/>
+    </sequence>
+  </env>
+
+  <block>
+    <line><data>${{Time}},U${{User}},C${{Host}},D${{Dst}},${{Ok}},${{Foreign}}</data></line>
+  </block>
+</tdc>

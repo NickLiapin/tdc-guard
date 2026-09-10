@@ -1,0 +1,15 @@
+worlds: 6
+held-out: 3600398 windows, labelled 64
+
+  ns-0-windows.csv: AUC 0.91789
+  ns-1-windows.csv: AUC 0.94548
+  ns-2-windows.csv: AUC 0.94332
+  ns-3-windows.csv: AUC 0.94312
+  ns-4-windows.csv: AUC 0.91426
+  ns-5-windows.csv: AUC 0.91646
+
+ENSEMBLE (ranks)           AUC 0.93819  false alarms before 16/64:       7  before 32:     621  before all:  1781047  worst rank  1781111
+
+false alarms before the N-th hit out of 64:
+   N:      1     2     4     8    16    24    32
+            0     2     2     3     7    19   621

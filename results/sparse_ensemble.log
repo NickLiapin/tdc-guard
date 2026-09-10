@@ -1,0 +1,29 @@
+read 3513108, windows 26193, labelled 3915
+sparse world 0 done
+read 3515826, windows 25789, labelled 3879
+sparse world 1 done
+read 3487694, windows 26058, labelled 3924
+sparse world 2 done
+read 3499577, windows 25748, labelled 3783
+sparse world 3 done
+read 3497740, windows 25939, labelled 3901
+sparse world 4 done
+read 3482025, windows 26053, labelled 3900
+sparse world 5 done
+SPARSE-WORLDS-DONE
+worlds: 6
+held-out: 3600398 windows, labelled 64
+
+  sp-0-windows.csv: AUC 0.94621
+  sp-1-windows.csv: AUC 0.93808
+  sp-2-windows.csv: AUC 0.92498
+  sp-3-windows.csv: AUC 0.94459
+  sp-4-windows.csv: AUC 0.94024
+  sp-5-windows.csv: AUC 0.95209
+
+spread of opinions: 0.00854
+ENSEMBLE (ranks)           AUC 0.94374  false alarms before 16/64:      10  before 32:    3870  before all:  1940670  worst rank  1940734
+
+false alarms before the N-th hit out of 64:
+   N:      1     2     4     8    16    24    32
+            6     7     7     9    10    61  3870

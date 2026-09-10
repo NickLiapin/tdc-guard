@@ -1,0 +1,10 @@
+# raw data and big derived files: downloaded and recomputed by the scripts
+data/
+results/*.csv
+results/*.npy
+# except the two window tables of the working days: with them the synthetic half runs without LANL
+!results/day8-shared.csv
+!results/day12-frozen-windows.csv
+__pycache__/
+*.pyc
+.DS_Store

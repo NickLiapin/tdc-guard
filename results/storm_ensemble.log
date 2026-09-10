@@ -1,0 +1,29 @@
+read 3499507, windows 25830, labelled 3932
+storm world 0 done
+read 3507504, windows 25754, labelled 3804
+storm world 1 done
+read 3518299, windows 25853, labelled 3888
+storm world 2 done
+read 3513547, windows 25680, labelled 3810
+storm world 3 done
+read 3476083, windows 25589, labelled 3853
+storm world 4 done
+read 3518506, windows 25714, labelled 3870
+storm world 5 done
+STORM-WORLDS-DONE
+worlds: 6
+held-out: 3600398 windows, labelled 64
+
+  st-0-windows.csv: AUC 0.94148
+  st-1-windows.csv: AUC 0.94161
+  st-2-windows.csv: AUC 0.92673
+  st-3-windows.csv: AUC 0.92514
+  st-4-windows.csv: AUC 0.94727
+  st-5-windows.csv: AUC 0.93487
+
+spread of opinions: 0.01234
+ENSEMBLE (ranks)           AUC 0.94072  false alarms before 16/64:       8  before 32:     389  before all:  1991037  worst rank  1991101
+
+false alarms before the N-th hit out of 64:
+   N:      1     2     4     8    16    24    32
+            3     4     4     5     8    24   389

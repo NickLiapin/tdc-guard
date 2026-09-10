@@ -1,0 +1,13 @@
+== synth-train: gen/world.tdc, зерно world-train-1
+прочитано 363337, окон 3835, из них помеченных 790
+== synth-exam: gen/world.tdc, зерно world-exam-1
+прочитано 364225, окон 3798, из них помеченных 749
+== rich-train: gen/world-rich.tdc, зерно world-train-1
+прочитано 7246138, окон 25365, из них помеченных 3497
+== rich-exam: gen/world-rich.tdc, зерно world-exam-1
+прочитано 7294018, окон 25501, из них помеченных 3448
+== nostage: gen/world-nostage.tdc, зерно nostage-1
+прочитано 1359554, окон 25187, из них помеченных 3754
+== sparse: gen/world-sparse.tdc, зерно sparse-1
+прочитано 3483968, окон 26062, из них помеченных 4068
+BASE-DONE

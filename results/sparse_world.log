@@ -1,0 +1,6 @@
+sparse: windows 26062, labelled 4068; events per window 1%/50%/90% = 1/19/57; windows <=2: 6.5%; coincidences 9, their median events 4
+
+model             d8 AUC           d12 AUC  d12: before 1st  before 6th
+-----------------------------------------------------------------------
+recurrent        1.00000    0.99327+-0.00104                0           0
+SSM              0.99998    0.94309+-0.00533                0           9

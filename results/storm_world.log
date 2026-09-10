@@ -1,0 +1,10 @@
+read 3499507, windows 25830, labelled 3932
+STORM-WORLD-MEASURED
+windows 25830, labelled 3932, normal 21898; storms 66 (median events in a storm 178); events 1/50/90% = 1/19/59; windows <=2: 7.4%; coincidences 48
+storm: windows 25830, labelled 3932; events per window 1%/50%/90% = 1/19/59; windows <=2: 7.4%; coincidences 48, their median events 13
+
+model             d8 AUC           d12 AUC  d12: before 1st  before 6th
+-----------------------------------------------------------------------
+recurrent        0.99998    0.99379+-0.00082                0           3
+SSM              0.99991    0.99316+-0.00045                0          33
+STORM-EVAL-DONE

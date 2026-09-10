@@ -1,0 +1,8 @@
+set                 model              d8 AUC           d12 AUC  d12 before 6th
+--------------------------------------------------------------------------------
+base world 400k      fully connected       0.99997    0.97518+-0.00343           13
+base world 400k      recurrent       0.99998    0.98999+-0.00042            7
+base world 400k      SSM                0.99999    0.98844+-0.00165           26
+six worlds merged    fully connected       0.99528    0.98149+-0.00288         2217
+six worlds merged    recurrent       0.99779    0.98054+-0.00289         2948
+six worlds merged    SSM                0.99918    0.98482+-0.00563          434

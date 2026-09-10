@@ -1,0 +1,11 @@
+architecture                    parameters            day 8             day 12
+--------------------------------------------------------------------------------
+LSTM-24 (current leader)              4249   0.99998+-0.00003     0.98999+-0.00042
+bidirectional LSTM-16              4641   0.99999+-0.00001     0.98555+-0.00144
+LSTM-24 two layers                   9049   0.99976+-0.00011     0.98904+-0.00030
+TCN (dilated convolutions)          4849   1.00000+-0.00000     0.98257+-0.00012
+transformer, self-attention           10225   0.99990+-0.00014     0.93700+-0.01062
+LMU (Legendre polynomials)               723   0.99846+-0.00098     0.97219+-0.01137
+diagonal SSM (S4-lite)           2305   0.99999+-0.00000     0.98844+-0.00165
+echo state network (reservoir)                   65   0.99410+-0.00001     0.96859+-0.00159
+external memory (NTM)                 2418   0.99936+-0.00013     0.98509+-0.00121

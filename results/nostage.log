@@ -1,0 +1,8 @@
+world                         model                   d12 AUC   before 6th
+------------------------------------------------------------------------
+rich WITH stages         recurrent      0.97196+-0.00163      3526
+rich WITH stages         SSM               0.98420+-0.00192       245
+rich WITHOUT stages          recurrent      0.99243+-0.00016         0
+rich WITHOUT stages          SSM               0.95273+-0.02080       445
+base (reference)            recurrent      0.98999+-0.00042         7
+base (reference)            SSM               0.98844+-0.00165        26

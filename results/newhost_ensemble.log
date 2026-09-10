@@ -1,0 +1,29 @@
+read 3474017, windows 26141, labelled 3864
+final world (storm+relocation+new hosts) 0 done
+read 3483738, windows 25873, labelled 3867
+final world (storm+relocation+new hosts) 1 done
+read 3496026, windows 25977, labelled 3915
+final world (storm+relocation+new hosts) 2 done
+read 3498446, windows 25733, labelled 3778
+final world (storm+relocation+new hosts) 3 done
+read 3493120, windows 25801, labelled 3745
+final world (storm+relocation+new hosts) 4 done
+read 3474466, windows 25665, labelled 3893
+final world (storm+relocation+new hosts) 5 done
+NH-WORLDS-DONE
+worlds: 6
+held-out: 3600398 windows, labelled 64
+
+  nh-0-windows.csv: AUC 0.90161
+  nh-1-windows.csv: AUC 0.90035
+  nh-2-windows.csv: AUC 0.91069
+  nh-3-windows.csv: AUC 0.88051
+  nh-4-windows.csv: AUC 0.92897
+  nh-5-windows.csv: AUC 0.87767
+
+spread of opinions: 0.00418
+ENSEMBLE (ranks)           AUC 0.90701  false alarms before 16/64:       2  before 32:    2538  before all:  2392457  worst rank  2392521
+
+false alarms before the N-th hit out of 64:
+   N:      1     2     4     8    16    24    32
+            1     1     1     1     2    43  2538

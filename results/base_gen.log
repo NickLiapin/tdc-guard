@@ -1,0 +1,13 @@
+== synth-train: gen/world.tdc, seed world-train-1 (a big world takes a few minutes in silence, the file appears at the end)
+read 363337, windows 3835, labelled 790
+== synth-exam: gen/world.tdc, seed world-exam-1 (a big world takes a few minutes in silence, the file appears at the end)
+read 364225, windows 3798, labelled 749
+== rich-train: gen/world-rich.tdc, seed world-train-1 (a big world takes a few minutes in silence, the file appears at the end)
+read 7246138, windows 25365, labelled 3497
+== rich-exam: gen/world-rich.tdc, seed world-exam-1 (a big world takes a few minutes in silence, the file appears at the end)
+read 7294018, windows 25501, labelled 3448
+== nostage: gen/world-nostage.tdc, seed nostage-1 (a big world takes a few minutes in silence, the file appears at the end)
+read 1359554, windows 25187, labelled 3754
+== sparse: gen/world-sparse.tdc, seed sparse-1 (a big world takes a few minutes in silence, the file appears at the end)
+read 3483968, windows 26062, labelled 4068
+BASE-DONE
