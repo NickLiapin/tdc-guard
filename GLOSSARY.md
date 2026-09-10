@@ -15,7 +15,7 @@ is for readers of the Russian article.
 | baseline drift | устаревание опоры | a frozen baseline no longer knows about new machines |
 | baseline scissors | ножницы опоры | refresh it often and it gets poisoned; freeze it and it drifts |
 | working days | рабочие сутки | LANL days 8 and 12; all tuning was done on them |
-| held-out set | отложенный набор | sixteen other days, 3.6M windows, 64 labelled; touched only for final checks |
+| held-out set (sealed in file names) | отложенный набор | sixteen other days, 3.6M windows, 64 labelled; touched only for final checks |
 | false alarms before the N-th hit | ложных до N-й | how many normal windows sit above the N-th labelled one in the ranked list |
 | worst rank | худшее место | the rank of the last labelled window |
 | AUC | AUC | area under the ROC curve |
@@ -39,16 +39,16 @@ is for readers of the Russian article.
 | failure storm | шторм отказов | hundreds of failed logins per hour from a broken service; normal according to the labels |
 | relocation | переезд | a person moving to another machine and working there all day |
 | newcomer | новичок | a fresh account working all day on one machine |
-| new host | новая машина | a machine with no history: everything on it is legitimately new |
+| new host (new machine) | новая машина | a machine with no history: everything on it is legitimately new |
 | role | роль | a kind of machine in a config (`isStorm`, `isMove`, `isCoin` and so on) |
 | fully connected network | полносвязная сеть | the 1333-weight MLP that looks at a single window |
 | recurrent network | рекуррентная сеть | the 4249-parameter LSTM that reads a machine's hours in order |
 | SSM | SSM | the state-space model from `net_py/exotic.py` |
-| council | консилиум | several networks whose outputs are combined |
+| council (ensemble) | консилиум (ансамбль) | several networks whose outputs are combined |
 | judge | судья | a small model trained to weigh the council's votes |
 | rank averaging | среднее рангов | each network ranks all the windows; a window gets its average rank |
 | spread of opinions | разброс мнений | the mean standard deviation of the networks' scores per window; predicts whether an ensemble will help |
 | micro-loop | микропетля | look at the top false alarms, find the machine, find the missing role, add two lines to the config |
 | attribution ladder | лестница атрибуции | the table that isolates what each factor contributes |
-| price of search / cost curve | цена поиска | false alarms as a function of hits found |
+| cost of search / cost curve (also: cost of full recall, cost of the first N hits) | цена поиска (она же цена полноты, цена первых N попаданий) | false alarms as a function of hits found |
 | "read N, windows M, labelled K" | "прочитано N, окон M, помеченных K" | what the measurer prints: log lines read, windows produced, windows with a label |

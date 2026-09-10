@@ -978,7 +978,7 @@ counters the gap is the same as before - hundreds of times.
 
 ### The big sweep: 93 networks in 170 seconds
 
-32 architectures, three seeds each. Refinements to the earlier conclusions:
+31 architectures, three seeds each. Refinements to the earlier conclusions:
 
 - **the capacity floor has been found**: "flat 4" (81 weights) falls short even
   on the easy day (0.99868), while "flat 8" (161 weights) already gives 0.99998.
@@ -2468,6 +2468,8 @@ On a budget of six networks, a mix of families is no better than one good family
 from diversity shows up only when each family has enough networks (4-6 each).
 Bottom line: **both the number of networks and the number of families matter; saturation comes at around 12-18 networks
 from 3 families**.
+
+Held-out set access count: +1 (the final family nh), +4 (family combinations), +1 (the saturation curve over the saved scores); at least 23 over the project in total.
 
 ---
 

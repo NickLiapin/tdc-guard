@@ -1,17 +1,9 @@
 <tdc version="0.1">
-  <!-- RICH WORLD. Two fundamental changes against the previous config.
-
-       1. The attack became a PROCESS, not a coin toss on every single
-          event. A machine has a start moment, and then the stages follow:
-          foothold (quiet, single events) -> credential harvesting (many failures)
-          -> spreading (in breadth) -> reaching the servers. The previous world produced
-          the third stage right away and never the first - hence the blindness to
-          diluted windows.
-
-       2. The norm is assembled from MANY legitimate mechanisms, not three. It is at
-          their intersection that coincidences are born - normal windows that happen
-          to carry the signature of an intruder. They cannot be drawn directly, but they
-          arise on their own once there are enough legitimate phenomena.
+  <!-- COINCIDENCE WORLD. The rich world at 1.5M events, attack stages included, plus an
+       explicit coincidence mechanism: the isCoin role, a machine where new accounts
+       and failures legitimately meet in one hour. Its control (gen/make-control.sh)
+       sets the share to zero and produced coincidences just as well - they come
+       from sparse windows, not from the mechanism.
 
        Roles: 0 workstation, 2 new host, 3 under foreign accounts,
               4 new AND under foreign accounts, 5 administrator on a round,

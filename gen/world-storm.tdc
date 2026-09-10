@@ -1,17 +1,8 @@
 <tdc version="0.1">
-  <!-- RICH WORLD. Two fundamental changes against the previous config.
-
-       1. The attack became a PROCESS, not a coin toss on every single
-          event. A machine has a start moment, and then the stages follow:
-          foothold (quiet, single events) -> credential harvesting (many failures)
-          -> spreading (in breadth) -> reaching the servers. The previous world produced
-          the third stage right away and never the first - hence the blindness to
-          diluted windows.
-
-       2. The norm is assembled from MANY legitimate mechanisms, not three. It is at
-          their intersection that coincidences are born - normal windows that happen
-          to carry the signature of an intruder. They cannot be drawn directly, but they
-          arise on their own once there are enough legitimate phenomena.
+  <!-- STORM WORLD. The sparse world plus the 'storm' role: a service with a broken
+       password, 1-2 users, 90-100% failures, all its events within 1-4 hours.
+       Added after the top of the held-out set turned out to be normal failure
+       storms. Family 'st' (gen/make-storm-worlds.sh).
 
        Roles: 0 workstation, 2 new host, 3 under foreign accounts,
               4 new AND under foreign accounts, 5 administrator on a round,
@@ -37,10 +28,10 @@
       <sequence name="isBrok"><gen type="text" value="1,0" percent="7,93"/></sequence>
       <sequence name="isMaint"><gen type="text" value="1,0" percent="6,94"/></sequence>
       <sequence name="isAdm"><gen type="text" value="1,0" percent="4,96"/></sequence>
-      <!-- STORM. A service with a broken password that hammers without stopping:
-           one or two users, a few destinations, 90-100% failures,
-           hundreds of events per hour. LANL has 3-13 such windows a day, labelled normal.
-           The previous worlds did not contain them, and the networks took a storm for an attack. -->
+      <!-- STORM. A service with a broken password hammering away without stopping:
+           one or two users, a few destinations, 90-100% failures, hundreds of events
+           an hour. In LANL there are 3-13 such windows a day, labelled normal.
+           Earlier worlds contained none, and the networks took a storm for an attack. -->
       <sequence name="isStorm"><gen type="text" value="1,0" percent="1.5,98.5"/></sequence>
       <!-- COINCIDENCE. A machine where both halves of the compromise signature
            legitimately come together: many new accounts AND many failures. Physically
@@ -52,7 +43,7 @@
       <sequence name="coinFailMil"><gen type="number" value="150..600"/></sequence>
       <sequence name="coinHour"><gen type="number" value="8..21"/></sequence>
       <sequence name="userSpan">
-        <gen if="isStorm == 1" type="number" value="1..2"/>
+        <gen if="isStorm == 1" type="number" value="1..2"/> <!-- accounts -->
         <gen if="isTerm == 1" type="number" value="40..160"/>
         <gen type="number" value="1..4"/>
       </sequence>
@@ -64,7 +55,7 @@
 
       <sequence name="isQuiet"><gen type="text" value="1,0" percent="18,82"/></sequence>
       <sequence name="spread">
-        <gen if="isStorm == 1" type="number" value="1..4"/>
+        <gen if="isStorm == 1" type="number" value="1..4"/> <!-- hours: the whole storm in 1-4 -->
         <gen if="isQuiet == 1" type="number" value="80..260"/>
         <gen type="number" value="1..40"/>
       </sequence>
@@ -79,7 +70,7 @@
 
       <sequence name="failMil"><gen type="number" value="20..700"/></sequence>
       <sequence name="baseMil">
-        <gen if="isStorm == 1" type="number" value="900..1000"/>
+        <gen if="isStorm == 1" type="number" value="900..1000"/> <!-- failures, out of a thousand -->
         <gen if="isBrok == 1" type="number" value="300..800"/>
         <gen type="number" value="1..30"/>
       </sequence>

@@ -16,7 +16,7 @@ reproducible: the configs are deterministic given the `seed`, and the Los Alamos
 valid credentials. The password is correct, nothing fails, the account is real.
 
 **The exam data:** LANL "Comprehensive, Multi-Source Cyber-Security Events"
-(A. D. Kent, 2015). 58 days, 17 684 computers, 12 425 users.
+(A. D. Kent, 2015). 58 days, 17 684 computers, 12 425 users, 1.65 billion events.
 A mirror for direct download: `lanl.ma.ic.ac.uk/data/cyber1/`.
 
 **The labelled ground truth:** 749 red-team exercise events -
@@ -32,8 +32,9 @@ foothold, C17693.
 | fact | number |
 | --- | --- |
 | the exercise's main "victim", U66, in a clean slice | 30 497 logins (an ordinary administrator) |
-| accounts on domain controllers (legitimately) | 2500-3000 |
-| share of new edges for normal windows: median / 90th percentile | **0.0000 / 0.0000** |
+| accounts on domain controllers (legitimately) | 2500-3000 (C586, C529, C467, C1065: 2996, 2752, 2686, 2590) |
+| accounts on file servers / workstations | 252, 118, 110 / 1, 2, 1 |
+| share of new edges for normal windows: median / 90th / 99th percentile | **0.0000 / 0.0000 / 0.5000** |
 | failure share for normal windows | 0.68% (1.54% for U-accounts) |
 
 **Conclusion:** the naive "many accounts from one machine" counter is fooled by servers;
@@ -109,8 +110,8 @@ same full recall showed **false alarms down fourfold** (27 -> 6) and precision a
 | | |
 | --- | --- |
 | caught | **15 of 15** |
-| false alarms | 19 |
-| ranks of the labelled windows | all in the top thirty of 231 787 |
+| false alarms at threshold 0.99 | 11 (DIARY, version 7) |
+| ranks of the labelled windows | all within the first 32 of 231 787 |
 | AUC | 0.99999 |
 
 The price of full recall - how many false alarms it takes to catch all 15:
@@ -289,7 +290,7 @@ judge/rows.mjs             loader that checks all features are present
 net_py/data.py             reading and encoding, numpy is the only dependency
 net_py/model.py            MLP with a configurable architecture
 net_py/evaluate.py         rank-based AUC and the cost curve, one pass
-net_py/sweep_big.py        sweep over 32 architectures
+net_py/sweep_big.py        sweep over 31 architectures
 net_py/council.py          council and judge
 net_py/weak_council.py     weak learners
 net_py/symbiosis.py        mixed pool
@@ -332,7 +333,7 @@ as such in the article).
 | mine | twenty-four LSTM-24, four world families | 0.937 | 1 | synthetic only | after the review |
 | mine | eighteen LSTM-24, three world families | 0.932 | **1** | synthetic only | after the review |
 | others' | UGEA-LMD (continuous-time dynamic graph) | 0.9254 | not published | labelled LANL | - |
-| mine | XGBoost boosting (from the article) | 0.918 | ~18 000 | synthetic only | article |
+| mine | XGBoost boosting (from the article) | 0.918 | 23 781 | synthetic only | article |
 | mine | one LSTM-24, base world (from the article) | 0.909 | 188 | synthetic only | article |
 | mine | six LSTM-24, final worlds | 0.907 | 2 | synthetic only | after the review |
 | mine | MLP, 1333 parameters (from the article) | 0.862 | - | synthetic only | article |

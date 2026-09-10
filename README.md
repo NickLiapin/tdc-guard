@@ -178,7 +178,7 @@ The bilingual glossary is in `GLOSSARY.md`.
 |---|---|
 | `world.tdc` | the base world, 135 lines, 400 thousand events. Everything started here; the article takes it apart in full |
 | `world-rich.tdc` | the rich world: 8 million events, the attack as a staged process. It turned out worse than the base world on the held-out set; kept as a negative result |
-| `world-nostage.tdc` | the same rich world without attack stages. Six of these make up the ensemble with 7 false alarms |
+| `world-nostage.tdc` | the same rich world without attack stages: the "clean world" of the article, family `ns`. Six of these make up the ensemble with 7 false alarms |
 | `world-sparse.tdc` | the sparse world: 18% quiet machines whose events are spread over 80-260 hours. Coincidences arise in it on their own |
 | `world-storm.tdc` | plus the "storm" role: a service with a broken password, hundreds of failures per hour |
 | `world-move.tdc` | plus a person relocating to another machine, and a fresh account |
@@ -327,7 +327,7 @@ during the project.
 ```
 
 Six window tables appear in `results/`. This takes about fifteen minutes:
-half a minute for each base world, four to five for the rich ones, four for
+half a minute for each base world (the generation itself takes 9 seconds, the rest is the measurer), four to five for the rich ones, four for
 no-stage, two for sparse. While a big world is being generated the generator
 is silent and the file appears only at the end - it has not hung. After each
 world the measurer prints a "read, windows, labelled" line; this is what you
@@ -460,6 +460,9 @@ while doing this.
 | 26 297, six worlds merged into one set | `results/heldout_nsmerged.log` |
 | sparse, storms, final on the held-out set | `results/sparse_ensemble.log`, `storm_ensemble.log`, `newhost_ensemble.log` |
 | the saturation curve | `results/saturation.log` |
+| 1 false alarm before the 16th, eighteen networks of three families | `FACTS.md`, section 16.5: computed from the saved scores `results/{ns,st,nh}-heldout-scores.npy`, there is no separate log |
+| the held-out cost table: fully connected, boosting, recurrent (17 / 55 / 245, 7 / 8 053 / 23 781, 3 / 102 / 188) | `DIARY.md`, the entry "MODEL FAMILIES: boosting, recurrent networks, exotica" |
+| spread of opinions 0.0002 / 0.004 / 0.014 | `FACTS.md`, section 16.2 (first run); the rerun `results/ns_ensemble_rerun.log` prints 0.015 |
 | the table of 31 architectures | `results/sweep_big.log`, `ARCHITECTURES.md` |
 | nine exotic architectures | `results/exotic.log` |
 | the micro-loop, day by day | `results/storm_world.log`, `move_world.log`, `move2_world.log`, `newhost_world.log`, `top_false_storm.log` |

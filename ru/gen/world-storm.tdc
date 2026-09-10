@@ -1,17 +1,8 @@
 <tdc version="0.1">
-  <!-- БОГАТЫЙ МИР. Две принципиальные перемены против прежнего конфига.
-
-       1. Нападение стало ПРОЦЕССОМ, а не подбрасыванием монеты на каждое
-          событие. У машины есть момент начала, и дальше идут стадии:
-          закрепление (тихо, единичные события) -> сбор учёток (много отказов)
-          -> распространение (вширь) -> выход на серверы. Прежний мир порождал
-          сразу третью стадию и никогда первую - отсюда и была слепота к
-          разбавленным окнам.
-
-       2. Норма собрана из МНОГИХ законных механизмов, а не из трёх. Именно на
-          их пересечении и рождаются совпадения - нормальные окна, случайно
-          несущие подпись чужого. Их нельзя нарисовать напрямую, но они
-          возникают сами, когда законных явлений достаточно много.
+  <!-- МИР СО ШТОРМАМИ. Разреженный мир плюс роль "шторм": служба со сломанным
+       паролем, 1-2 пользователя, 90-100% отказов, все события в 1-4 часа.
+       Добавлена после того, как в верхушке отложенного набора оказались
+       нормальные шторма отказов. Семья st (gen/make-storm-worlds.sh).
 
        Роли: 0 станция, 2 новая машина, 3 под чужими учётками,
              4 новая И под чужими, 5 администратор на обходе,
@@ -52,7 +43,7 @@
       <sequence name="coinFailMil"><gen type="number" value="150..600"/></sequence>
       <sequence name="coinHour"><gen type="number" value="8..21"/></sequence>
       <sequence name="userSpan">
-        <gen if="isStorm == 1" type="number" value="1..2"/>
+        <gen if="isStorm == 1" type="number" value="1..2"/> <!-- учёток -->
         <gen if="isTerm == 1" type="number" value="40..160"/>
         <gen type="number" value="1..4"/>
       </sequence>
@@ -64,7 +55,7 @@
 
       <sequence name="isQuiet"><gen type="text" value="1,0" percent="18,82"/></sequence>
       <sequence name="spread">
-        <gen if="isStorm == 1" type="number" value="1..4"/>
+        <gen if="isStorm == 1" type="number" value="1..4"/> <!-- часов: весь шторм в 1-4 часа -->
         <gen if="isQuiet == 1" type="number" value="80..260"/>
         <gen type="number" value="1..40"/>
       </sequence>
@@ -79,7 +70,7 @@
 
       <sequence name="failMil"><gen type="number" value="20..700"/></sequence>
       <sequence name="baseMil">
-        <gen if="isStorm == 1" type="number" value="900..1000"/>
+        <gen if="isStorm == 1" type="number" value="900..1000"/> <!-- отказов, из тысячи -->
         <gen if="isBrok == 1" type="number" value="300..800"/>
         <gen type="number" value="1..30"/>
       </sequence>

@@ -1,17 +1,8 @@
 <tdc version="0.1">
-  <!-- RICH WORLD. Two fundamental changes against the previous config.
-
-       1. The attack became a PROCESS, not a coin toss on every single
-          event. A machine has a start moment, and then the stages follow:
-          foothold (quiet, single events) -> credential harvesting (many failures)
-          -> spreading (in breadth) -> reaching the servers. The previous world produced
-          the third stage right away and never the first - hence the blindness to
-          diluted windows.
-
-       2. The norm is assembled from MANY legitimate mechanisms, not three. It is at
-          their intersection that coincidences are born - normal windows that happen
-          to carry the signature of an intruder. They cannot be drawn directly, but they
-          arise on their own once there are enough legitimate phenomena.
+  <!-- SPARSE WORLD. The no-stage world at 4M events plus 18% quiet machines whose
+       events are spread over 80-260 hours: that is what makes windows of one or
+       two events, and coincidences follow from them by themselves. Family 'sp'
+       (gen/make-sparse-worlds.sh); the micro-loop starts from here.
 
        Roles: 0 workstation, 2 new host, 3 under foreign accounts,
               4 new AND under foreign accounts, 5 administrator on a round,
@@ -56,6 +47,7 @@
         <gen type="number" value="2..9"/>
       </sequence>
 
+      <!-- 18% of machines are "quiet": their events smear over 80-260 hours instead of 1-40 -->
       <sequence name="isQuiet"><gen type="text" value="1,0" percent="18,82"/></sequence>
       <sequence name="spread">
         <gen if="isQuiet == 1" type="number" value="80..260"/>
@@ -104,6 +96,7 @@
       <gen type="formula" expr="Role == 2 || Role == 4 ? 1 : (hash(N, 6) < 0.60 ? 0 : 1)"/>
     </sequence>
 
+    <!-- hour of the event: the machine's spread sets how many hours its events land on -->
     <sequence name="Time">
       <gen type="formula"
            expr="Period == 0 ? floor(hash(N, 5) * 28800) : 28800 + floor(hash(N, 3) * Spread) * 3600 + floor(hash(N, 4) * 3600)"/>

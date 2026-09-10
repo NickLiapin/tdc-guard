@@ -1,17 +1,10 @@
 <tdc version="0.1">
-  <!-- RICH WORLD. Two fundamental changes against the previous config.
-
-       1. The attack became a PROCESS, not a coin toss on every single
-          event. A machine has a start moment, and then the stages follow:
-          foothold (quiet, single events) -> credential harvesting (many failures)
-          -> spreading (in breadth) -> reaching the servers. The previous world produced
-          the third stage right away and never the first - hence the blindness to
-          diluted windows.
-
-       2. The norm is assembled from MANY legitimate mechanisms, not three. It is at
-          their intersection that coincidences are born - normal windows that happen
-          to carry the signature of an intruder. They cannot be drawn directly, but they
-          arise on their own once there are enough legitimate phenomena.
+  <!-- NO-STAGE WORLD (the 'clean' world). The rich world - 1.5M events, many
+       legitimate mechanisms: terminal servers, broken services, maintenance
+       bursts, admins on rounds - with the attack STAGES removed: a compromised
+       machine's foreign share is 100% from the first hour. Six of these with
+       coincidence shares 0.5-5% (gen/make-nostage-worlds.sh) form the 'ns' family
+       behind the ensemble with 7 false alarms before the 16th attack.
 
        Roles: 0 workstation, 2 new host, 3 under foreign accounts,
               4 new AND under foreign accounts, 5 administrator on a round,
