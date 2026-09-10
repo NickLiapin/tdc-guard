@@ -1263,7 +1263,7 @@ A check on day 12 showed the same thing on other models:
 **Three times in one day AUC named the wrong winner.** The echo state network,
 with a respectable AUC of 0.969, needs 3406 false alarms before the FIRST window
 is found, against one for the LSTM - a factor of three and a half thousand for a
-difference of three hundredths in AUC.
+difference of two hundredths in AUC.
 
 Every earlier comparison in this diary made by AUC has to be reread with this in
 mind. The cost curve is the right metric.
