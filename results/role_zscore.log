@@ -1,0 +1,27 @@
+role buckets by historySize quantiles 0.60 / 0.95; bucket sizes per set:
+  synthetic, other seed  2384 / 1234 / 180   labelled per bucket: 447 / 287 / 15
+  day 8                  139137 / 81067 / 11583   labelled per bucket: 15 / 0 / 0
+  day 12                 134416 / 78374 / 11197   labelled per bucket: 12 / 0 / 0
+  held-out               2160624 / 1259988 / 179786   labelled per bucket: 64 / 0 / 0
+
+variant  seed          synthetic, oth                   day 8                  day 12                held-out
+                     AUC / before 3th        AUC / before 6th        AUC / before 6th       AUC / before 16th
+raw         7        0.99992 /      0        0.99999 /      1        0.97640 /      6        0.86175 /    245
+raw        17        0.99995 /      0        0.99994 /     10        0.97050 /     15        0.85625 /    300
+raw        27        0.99992 /      0        0.99998 /      1        0.97862 /     13        0.86930 /    237
+global      7        1.00000 /      0        0.99138 /   2134        0.98017 /   3387        0.87148 /  45263
+global     17        0.99999 /      0        0.99156 /   2055        0.97995 /   3233        0.88203 /  44871
+global     27        0.99999 /      0        0.97769 /   5780        0.96078 /   8741        0.86859 /  95278
+role        7        1.00000 /      0        0.98995 /   2506        0.97400 /   4169        0.84585 /  47005
+role       17        1.00000 /      0        0.99114 /   2171        0.97794 /   3685        0.86171 /  43683
+role       27        1.00000 /      0        0.99264 /   1733        0.97396 /   3152        0.85556 /  47895
+
+mean over three seeds (AUC +- std / median false alarms):
+raw            0.99993+-0.00001 /      0  0.99997+-0.00002 /      1  0.97518+-0.00343 /     13  0.86243+-0.00535 /    245
+global         0.99999+-0.00000 /      0  0.98688+-0.00650 /   2134  0.97363+-0.00909 /   3387  0.87404+-0.00578 /  45263
+role           1.00000+-0.00000 /      0  0.99124+-0.00110 /   2171  0.97530+-0.00187 /   3685  0.85437+-0.00653 /  47005
+
+
+LSTM-24, base world -> held-out, seed 7:
+  raw    AUC 0.92222  false alarms before 1/8/16/24/32: 2/38/136/239/1340
+  role   AUC 0.87685  false alarms before 1/8/16/24/32: 52/250/624/5056/48053

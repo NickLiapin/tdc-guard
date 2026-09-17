@@ -460,6 +460,7 @@ while doing this.
 | 26 297, six worlds merged into one set | `results/heldout_nsmerged.log` |
 | sparse, storms, final on the held-out set | `results/sparse_ensemble.log`, `storm_ensemble.log`, `newhost_ensemble.log` |
 | the saturation curve | `results/saturation.log` |
+| a reader's question: does the AUC hold up if features are z-scored within a host role? | `results/role_zscore.log`, script `net_py/role_zscore.py` (no: the held-out AUC of the fully connected network 0.862 -> 0.854, false alarms before the 16th 245 -> 47 005; LSTM-24 0.922 -> 0.877, 136 -> 624) |
 | 1 false alarm before the 16th, eighteen networks of three families | `FACTS.md`, section 16.5: computed from the saved scores `results/{ns,st,nh}-heldout-scores.npy`, there is no separate log |
 | the held-out cost table: fully connected, boosting, recurrent (17 / 55 / 245, 7 / 8 053 / 23 781, 3 / 102 / 188) | `DIARY.md`, the entry "MODEL FAMILIES: boosting, recurrent networks, exotica" |
 | spread of opinions 0.0002 / 0.004 / 0.014 | `FACTS.md`, section 16.2 (first run); the rerun `results/ns_ensemble_rerun.log` prints 0.015 |

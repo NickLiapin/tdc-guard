@@ -2515,3 +2515,21 @@ the multiplication sign -> "x", the single-character ellipsis -> three dots. Aff
 judge/*.mjs, exam/*, gen/*.sh and the article text (text nodes only, tags
 untouched). All py/mjs/sh checked by compiling them, the HTML by a parser. Backup:
 _backup-typography-*.tar.gz and index_6.html.pered-tipografikoj.
+
+---
+
+## 2026-09-17 - A reader's question: normalising within a host role
+
+A reader on Reddit suggested baselining a host against its peer class rather
+than its own history and asked whether the AUC holds up if features are
+z-scored within a role. LANL has no inventory, so the role is a proxy: hosts
+bucketed by baseline size (historySize quantiles 0.60 and 0.95). All 64
+labelled windows of the held-out set fall into the bottom, workstation-sized
+bucket: the foothold has a workstation's history and a server's account
+count. Three feature variants, fully connected [12]x8, three seeds, held-out
+set: raw 0.862 / 245 before the 16th; global z-score 0.874 / 45 263; within
+role 0.854 / 47 005. LSTM-24, seed 7: raw 0.922 / 136, within role 0.877 /
+624. Standardising by a set's own statistics brings back the scale gap
+between the worlds that the log transform absorbed; role carries signal, but
+as a feature or as a peer-class baseline, not as a normaliser. Script
+net_py/role_zscore.py, log results/role_zscore.log.
